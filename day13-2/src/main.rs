@@ -15,18 +15,15 @@ fn parse(inp: Vec<String>) -> Vec<Option<u128>> {
 
 fn run(busses: Vec<Option<u128>>) -> u128 {
     let trimmed = translate(busses);
-    println!("{:?}", &trimmed);
     let mut x_found = solve_pair(trimmed[0].0, trimmed[0].1, trimmed[1]);
     let mut off_found = trimmed[0].1 * trimmed[1].1;
 
     let mut iter = trimmed.iter();
     iter.next();
     iter.next();
-    println!("x = {} n + {}", off_found, x_found);
     for (a, n) in iter {
         x_found = solve_pair(x_found, off_found, (*a, *n));
         off_found = off_found * n;
-        println!("x = {} n + {}", off_found, x_found);
     }
     x_found
 }
@@ -43,7 +40,7 @@ fn translate(inp: Vec<Option<u128>>) -> Vec<(u128, u128)> {
         })
         .map(|(e, i)| (e.unwrap(), i))
         .map(|(n, a)| if a < n { (a, n) } else { (a % n, n) })
-        .map(|(a, n)| (n - a, n))
+        .map(|(a, n)| ((n - a) % n, n))
         .collect::<Vec<(u128, u128)>>();
 
     list.sort_by(|(_a1, n1), (_a2, n2)| {
@@ -89,5 +86,5 @@ fn main() {
     let ids = parse(list);
 
     let time = run(ids);
-    println!("Answer: {}", time);
+    println!("{}", time);
 }
